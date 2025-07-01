@@ -56,6 +56,8 @@ struct NewsCardView: View {
                     .aspectRatio(contentMode: .fill)
                     .frame(height: 200)
                     .clipped()
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .matchedTransitionSource(id: article.id, in: imageTransition)
             } placeholder: {
                 Rectangle()
                     .fill(article.accentColor.opacity(0.3))
@@ -64,9 +66,9 @@ struct NewsCardView: View {
                         ProgressView()
                             .tint(.white)
                     )
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .matchedTransitionSource(id: article.id, in: imageTransition)
             }
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .matchedTransitionSource(id: article.id, in: imageTransition)
             .padding(.horizontal, 12)
             .padding(.top, 12)
             

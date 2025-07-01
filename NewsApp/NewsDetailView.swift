@@ -66,6 +66,7 @@ struct NewsDetailView: View {
                                 .frame(height: 240)
                                 .clipShape(RoundedRectangle(cornerRadius: 12))
                                 .clipped()
+                                .matchedTransitionDestination(id: article.id, in: imageTransition)
                         } placeholder: {
                             RoundedRectangle(cornerRadius: 12)
                                 .fill(Color(hex: article.category.color).opacity(0.6))
@@ -74,8 +75,8 @@ struct NewsDetailView: View {
                                     ProgressView()
                                         .tint(.white)
                                 )
+                                .matchedTransitionDestination(id: article.id, in: imageTransition)
                         }
-                        .matchedTransitionDestination(id: article.id, in: imageTransition)
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 24)
