@@ -3,6 +3,7 @@ import SwiftUI
 struct NewsDetailView: View {
     // MARK: - Properties
     let article: NewsArticle
+    @Environment(\.dismiss) private var dismiss
 
     @State private var titleOpacity: Double = 0
     @State private var titleOffset: CGFloat = 30
@@ -151,12 +152,17 @@ struct NewsDetailView: View {
             // Custom Toolbar Overlay
             VStack {
                 HStack {
-                    Image(systemName: "xmark")
-                        .font(.system(size: 17, weight: .medium))
-                        .foregroundColor(.white)
-                        .frame(width: 44, height: 44)
-                        .background(Color.black.opacity(0.4))
-                        .clipShape(Circle())
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 17, weight: .medium))
+                            .foregroundColor(.white)
+                            .frame(width: 44, height: 44)
+                            .background(Color.black.opacity(0.4))
+                            .clipShape(Circle())
+                    }
+                    .buttonStyle(PlainButtonStyle())
                     
                     Spacer()
                     
@@ -190,33 +196,22 @@ struct NewsDetailView: View {
         .navigationBarHidden(true)
         .preferredColorScheme(.dark)
         .onAppear {
-            // Fast staggered spring animation sequence after zoom transition
-            // 1. Title
-            withAnimation(.spring(response: 0.6, dampingFraction: 0.8, blendDuration: 0).delay(0.1)) {
+            // Simplified animation sequence to avoid conflicts with zoom transition
+            withAnimation(.easeOut(duration: 0.4).delay(0.1)) {
                 titleOpacity = 1.0
                 titleOffset = 0
-            }
-            
-            // 2. Metadata
-            withAnimation(.spring(response: 0.6, dampingFraction: 0.8, blendDuration: 0).delay(0.15)) {
                 metadataOpacity = 1.0
                 metadataOffset = 0
             }
             
-            // 3. Image
-            withAnimation(.spring(response: 0.6, dampingFraction: 0.8, blendDuration: 0).delay(0.2)) {
+            withAnimation(.easeOut(duration: 0.4).delay(0.2)) {
                 imageOpacity = 1.0
                 imageOffset = 0
             }
             
-            // 4. Summary
-            withAnimation(.spring(response: 0.6, dampingFraction: 0.8, blendDuration: 0).delay(0.25)) {
+            withAnimation(.easeOut(duration: 0.4).delay(0.3)) {
                 summaryOpacity = 1.0
                 summaryOffset = 0
-            }
-            
-            // 5. Content
-            withAnimation(.spring(response: 0.6, dampingFraction: 0.8, blendDuration: 0).delay(0.3)) {
                 contentOpacity = 1.0
                 contentOffset = 0
             }

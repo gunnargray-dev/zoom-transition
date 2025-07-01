@@ -11,7 +11,7 @@ struct NewsFeedView: View {
     @Namespace private var transitionNamespace
 
     private let columns = [
-        GridItem(.flexible(), spacing: 16)
+        GridItem(.flexible(), spacing: 0)
     ]
 
     // MARK: - Body
@@ -33,8 +33,9 @@ struct NewsFeedView: View {
                             .buttonStyle(PlainButtonStyle())
                         }
                     }
-                    .padding(.horizontal, 16)
+                    .padding(.horizontal, 20)
                     .padding(.top, 20)
+                    .padding(.bottom, 20)
                 }
             }
         }
@@ -52,37 +53,36 @@ struct NewsCardView: View {
     // MARK: - Body
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // Inset Image with rounded corners
+            // Responsive Image
             AsyncImage(url: URL(string: article.imageUrl)) { image in
                 image
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .frame(width: 345, height: 200)
+                    .frame(height: 200)
                     .clipped()
             } placeholder: {
                 Rectangle()
                     .fill(article.accentColor.opacity(0.3))
-                    .frame(width: 345, height: 200)
+                    .frame(height: 200)
                     .overlay(
                         ProgressView()
                             .tint(.white)
                     )
             }
             .clipShape(RoundedRectangle(cornerRadius: 12))
-            .padding(.horizontal, 8)
-            .padding(.top, 8)
+            .padding(.horizontal, 12)
+            .padding(.top, 12)
             
-            Spacer()
-            
-            // Bottom content with proper spacing
+            // Content area with fixed height to prevent jumping
             VStack(alignment: .leading, spacing: 12) {
-                // Title at bottom
+                // Title
                 Text(article.title)
                     .font(.headline)
                     .fontWeight(.semibold)
                     .foregroundColor(.white)
                     .lineLimit(3)
                     .multilineTextAlignment(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 
                 // Bottom row with sources and icons
                 HStack {
@@ -119,10 +119,10 @@ struct NewsCardView: View {
                     }
                 }
             }
-            .padding(.horizontal, 12)
-            .padding(.bottom, 12)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 16)
+            .frame(height: 100, alignment: .top)
         }
-        .frame(width: 361, alignment: .topLeading)
         .background(
             LinearGradient(
                 stops: [
