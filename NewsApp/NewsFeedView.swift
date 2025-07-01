@@ -21,7 +21,6 @@ struct NewsFeedView: View {
                         ForEach(articles) { article in
                             NavigationLink {
                                 NewsDetailView(article: article, imageTransition: imageTransition)
-                                    .navigationTransition(.zoom(sourceID: article.id, in: imageTransition))
                             } label: {
                                 NewsCardView(article: article, imageTransition: imageTransition)
                             }
@@ -57,7 +56,7 @@ struct NewsCardView: View {
                     .frame(height: 200)
                     .clipped()
                     .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .matchedTransitionSource(id: article.id, in: imageTransition)
+                    .matchedGeometryEffect(id: article.id, in: imageTransition)
             } placeholder: {
                 Rectangle()
                     .fill(article.accentColor.opacity(0.3))
@@ -67,7 +66,7 @@ struct NewsCardView: View {
                             .tint(.white)
                     )
                     .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .matchedTransitionSource(id: article.id, in: imageTransition)
+                    .matchedGeometryEffect(id: article.id, in: imageTransition)
             }
             .padding(.horizontal, 12)
             .padding(.top, 12)
