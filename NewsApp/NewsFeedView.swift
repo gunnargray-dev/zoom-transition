@@ -15,7 +15,7 @@ struct NewsFeedView: View {
     // MARK: - Body
     var body: some View {
         ZStack {
-            // Main Feed View
+            // Main Feed View (fixed, no animation)
             NavigationStack {
                 ZStack {
                     Color(hex: "191a1a").ignoresSafeArea()
@@ -26,8 +26,11 @@ struct NewsFeedView: View {
                                 if selectedArticle?.id != article.id || !showDetailView {
                                     Button {
                                         selectedArticle = article
-                                        withAnimation(.easeInOut(duration: 0.6)) {
-                                            showDetailView = true
+                                        // Slight delay to ensure layout is stable before animating
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                                            withAnimation(.spring(response: 0.7, dampingFraction: 0.8)) {
+                                                showDetailView = true
+                                            }
                                         }
                                     } label: {
                                         NewsCardView(
@@ -37,6 +40,14 @@ struct NewsFeedView: View {
                                         )
                                     }
                                     .buttonStyle(PlainButtonStyle())
+                                } else {
+                                    // Invisible placeholder to maintain layout
+                                    NewsCardView(
+                                        article: article, 
+                                        imageTransition: imageTransition,
+                                        isSelected: true
+                                    )
+                                    .opacity(0)
                                 }
                             }
                         }
@@ -44,6 +55,7 @@ struct NewsFeedView: View {
                         .padding(.top, 20)
                         .padding(.bottom, 20)
                     }
+                    .animation(.none, value: showDetailView) // Disable animation for feed
                 }
                 .navigationTitle("News Feed")
                 .navigationBarTitleDisplayMode(.large)
@@ -56,12 +68,17 @@ struct NewsFeedView: View {
                     article: article, 
                     imageTransition: imageTransition,
                     onDismiss: {
-                        withAnimation(.easeInOut(duration: 0.6)) {
+                        withAnimation(.spring(response: 0.7, dampingFraction: 0.8)) {
                             showDetailView = false
+                        }
+                        // Clear selection after animation
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                            selectedArticle = nil
                         }
                     }
                 )
                 .zIndex(1)
+                .transition(.identity) // No transition animation for the modal itself
             }
         }
     }
@@ -150,6 +167,7 @@ struct NewsCardView: View {
             .padding(.vertical, 16)
             .frame(height: 100, alignment: .top)
             .opacity(isSelected ? 0 : 1)
+            .animation(.easeOut(duration: 0.3), value: isSelected)
         }
         .frame(maxWidth: .infinity)
         .background(
@@ -162,14 +180,20 @@ struct NewsCardView: View {
                 endPoint: UnitPoint(x: 0.02, y: 0.01)
             )
             .opacity(isSelected ? 0 : 1)
+            .animation(.easeOut(duration: 0.3), value: isSelected)
         )
-        .background(Color(red: 0.14, green: 0.15, blue: 0.15).opacity(isSelected ? 0 : 1))
+        .background(
+            Color(red: 0.14, green: 0.15, blue: 0.15)
+                .opacity(isSelected ? 0 : 1)
+                .animation(.easeOut(duration: 0.3), value: isSelected)
+        )
         .cornerRadius(16)
         .overlay(
             RoundedRectangle(cornerRadius: 16)
                 .inset(by: 0.5)
                 .stroke(Constants.borderOffsetPlus, lineWidth: 1)
                 .opacity(isSelected ? 0 : 1)
+                .animation(.easeOut(duration: 0.3), value: isSelected)
         )
         .layoutPriority(1)
     }

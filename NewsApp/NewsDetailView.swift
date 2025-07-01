@@ -5,6 +5,20 @@ struct NewsDetailView: View {
     let article: NewsArticle
     let imageTransition: Namespace.ID
     let onDismiss: () -> Void
+    
+    // Animation states for staggered entrance
+    @State private var titleOpacity: Double = 0
+    @State private var titleOffset: CGFloat = 30
+    @State private var metadataOpacity: Double = 0
+    @State private var metadataOffset: CGFloat = 30
+    @State private var summaryOpacity: Double = 0
+    @State private var summaryOffset: CGFloat = 30
+    @State private var contentOpacity: Double = 0
+    @State private var contentOffset: CGFloat = 30
+    @State private var toolbarOpacity: Double = 0
+    
+    // Drag gesture state for swipe to dismiss
+    @State private var dragOffset: CGSize = .zero
 
     // MARK: - Body
     var body: some View {
@@ -21,6 +35,8 @@ struct NewsDetailView: View {
                             .lineLimit(nil)
                             .foregroundColor(.white)
                             .multilineTextAlignment(.leading)
+                            .opacity(titleOpacity)
+                            .offset(y: titleOffset)
                         
                         // Source and timestamp
                         HStack(spacing: 8) {
@@ -53,6 +69,8 @@ struct NewsDetailView: View {
                                     .foregroundColor(.white.opacity(0.9))
                             }
                         }
+                        .opacity(metadataOpacity)
+                        .offset(y: metadataOffset)
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 74) // 50px for status bar + 24px spacing to toolbar
@@ -113,6 +131,8 @@ struct NewsDetailView: View {
                                 }
                             }
                         }
+                        .opacity(summaryOpacity)
+                        .offset(y: summaryOffset)
                         
                         // Full Article Content
                         VStack(alignment: .leading, spacing: 16) {
@@ -121,6 +141,8 @@ struct NewsDetailView: View {
                                 .lineSpacing(6)
                                 .foregroundColor(.white)
                         }
+                        .opacity(contentOpacity)
+                        .offset(y: contentOffset)
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 24)
@@ -167,10 +189,60 @@ struct NewsDetailView: View {
                     }
                 }
                 .padding(.horizontal, 20)
+                .opacity(toolbarOpacity)
                 Spacer()
             }
         }
+        .offset(y: dragOffset.height)
+        .gesture(
+            DragGesture()
+                .onChanged { value in
+                    if value.translation.height > 0 {
+                        dragOffset = value.translation
+                    }
+                }
+                .onEnded { value in
+                    if value.translation.height > 100 {
+                        onDismiss()
+                    } else {
+                        withAnimation(.easeOut(duration: 0.3)) {
+                            dragOffset = .zero
+                        }
+                    }
+                }
+        )
         .preferredColorScheme(.dark)
+        .onAppear {
+            // Staggered animation sequence
+            // 1. Title appears first
+            withAnimation(.easeOut(duration: 0.5).delay(0.3)) {
+                titleOpacity = 1.0
+                titleOffset = 0
+            }
+            
+            // 2. Metadata follows
+            withAnimation(.easeOut(duration: 0.5).delay(0.4)) {
+                metadataOpacity = 1.0
+                metadataOffset = 0
+            }
+            
+            // 3. Summary section
+            withAnimation(.easeOut(duration: 0.5).delay(0.5)) {
+                summaryOpacity = 1.0
+                summaryOffset = 0
+            }
+            
+            // 4. Content section
+            withAnimation(.easeOut(duration: 0.5).delay(0.6)) {
+                contentOpacity = 1.0
+                contentOffset = 0
+            }
+            
+            // 5. Toolbar appears last
+            withAnimation(.easeOut(duration: 0.5).delay(0.2)) {
+                toolbarOpacity = 1.0
+            }
+        }
     }
 }
 
