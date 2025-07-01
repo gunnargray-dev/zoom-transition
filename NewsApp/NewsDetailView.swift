@@ -4,7 +4,7 @@ struct NewsDetailView: View {
     // MARK: - Properties
     let article: NewsArticle
     let imageTransition: Namespace.ID
-    @Environment(\.dismiss) private var dismiss
+    let onDismiss: () -> Void
 
     // MARK: - Body
     var body: some View {
@@ -77,7 +77,7 @@ struct NewsDetailView: View {
                             }
                         }
                         .clipShape(RoundedRectangle(cornerRadius: 12))
-                        .matchedGeometryEffect(id: article.id, in: imageTransition)
+                        .matchedGeometryEffect(id: "\(article.id)-image", in: imageTransition)
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 24)
@@ -131,9 +131,7 @@ struct NewsDetailView: View {
             // Custom Toolbar Overlay
             VStack {
                 HStack {
-                    Button(action: {
-                        dismiss()
-                    }) {
+                    Button(action: onDismiss) {
                         Image(systemName: "xmark")
                             .font(.system(size: 17, weight: .medium))
                             .foregroundColor(.white)
@@ -172,7 +170,6 @@ struct NewsDetailView: View {
                 Spacer()
             }
         }
-        .navigationBarHidden(true)
         .preferredColorScheme(.dark)
     }
 }
@@ -183,6 +180,7 @@ struct NewsDetailView: View {
 
     return NewsDetailView(
         article: NewsArticle.sampleArticles.first!,
-        imageTransition: previewNamespace
+        imageTransition: previewNamespace,
+        onDismiss: {}
     )
 }

@@ -9,37 +9,61 @@ struct NewsFeedView: View {
     // MARK: - Properties
     @State private var articles = NewsArticle.sampleArticles
     @State private var selectedArticle: NewsArticle?
+    @State private var showDetailView = false
     @Namespace private var imageTransition
 
     // MARK: - Body
     var body: some View {
-        NavigationStack {
-            ZStack {
-                Color(hex: "191a1a").ignoresSafeArea()
+        ZStack {
+            // Main Feed View
+            NavigationStack {
+                ZStack {
+                    Color(hex: "191a1a").ignoresSafeArea()
 
-                ScrollView {
-                    VStack(spacing: 20) {
-                        ForEach(articles) { article in
-                            Button {
-                                selectedArticle = article
-                            } label: {
-                                NewsCardView(article: article, imageTransition: imageTransition)
+                    ScrollView {
+                        VStack(spacing: 20) {
+                            ForEach(articles) { article in
+                                if selectedArticle?.id != article.id || !showDetailView {
+                                    Button {
+                                        selectedArticle = article
+                                        withAnimation(.easeInOut(duration: 0.6)) {
+                                            showDetailView = true
+                                        }
+                                    } label: {
+                                        NewsCardView(
+                                            article: article, 
+                                            imageTransition: imageTransition,
+                                            isSelected: selectedArticle?.id == article.id && showDetailView
+                                        )
+                                    }
+                                    .buttonStyle(PlainButtonStyle())
+                                }
                             }
-                            .buttonStyle(PlainButtonStyle())
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.top, 20)
+                        .padding(.bottom, 20)
+                    }
+                }
+                .navigationTitle("News Feed")
+                .navigationBarTitleDisplayMode(.large)
+                .preferredColorScheme(.dark)
+            }
+            
+            // Modal Detail View Overlay
+            if showDetailView, let article = selectedArticle {
+                NewsDetailView(
+                    article: article, 
+                    imageTransition: imageTransition,
+                    onDismiss: {
+                        withAnimation(.easeInOut(duration: 0.6)) {
+                            showDetailView = false
                         }
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 20)
-                    .padding(.bottom, 20)
-                }
-            }
-            .navigationDestination(item: $selectedArticle) { article in
-                NewsDetailView(article: article, imageTransition: imageTransition)
+                )
+                .zIndex(1)
             }
         }
-        .navigationTitle("News Feed")
-        .navigationBarTitleDisplayMode(.large)
-        .preferredColorScheme(.dark)
     }
 }
 
@@ -48,6 +72,7 @@ struct NewsCardView: View {
     // MARK: - Properties
     let article: NewsArticle
     let imageTransition: Namespace.ID
+    let isSelected: Bool
 
     // MARK: - Body
     var body: some View {
@@ -71,7 +96,7 @@ struct NewsCardView: View {
                 }
             }
             .clipShape(RoundedRectangle(cornerRadius: 12))
-            .matchedGeometryEffect(id: article.id, in: imageTransition)
+            .matchedGeometryEffect(id: "\(article.id)-image", in: imageTransition)
             .padding(.horizontal, 12)
             .padding(.top, 12)
             
@@ -124,6 +149,7 @@ struct NewsCardView: View {
             .padding(.horizontal, 16)
             .padding(.vertical, 16)
             .frame(height: 100, alignment: .top)
+            .opacity(isSelected ? 0 : 1)
         }
         .frame(maxWidth: .infinity)
         .background(
@@ -135,13 +161,15 @@ struct NewsCardView: View {
                 startPoint: UnitPoint(x: 0.5, y: 0.4),
                 endPoint: UnitPoint(x: 0.02, y: 0.01)
             )
+            .opacity(isSelected ? 0 : 1)
         )
-        .background(Color(red: 0.14, green: 0.15, blue: 0.15))
+        .background(Color(red: 0.14, green: 0.15, blue: 0.15).opacity(isSelected ? 0 : 1))
         .cornerRadius(16)
         .overlay(
             RoundedRectangle(cornerRadius: 16)
                 .inset(by: 0.5)
                 .stroke(Constants.borderOffsetPlus, lineWidth: 1)
+                .opacity(isSelected ? 0 : 1)
         )
         .layoutPriority(1)
     }
