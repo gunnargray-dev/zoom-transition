@@ -5,17 +5,6 @@ struct NewsDetailView: View {
     let article: NewsArticle
     @Environment(\.dismiss) private var dismiss
 
-    @State private var titleOpacity: Double = 0
-    @State private var titleOffset: CGFloat = 30
-    @State private var metadataOpacity: Double = 0
-    @State private var metadataOffset: CGFloat = 30
-    @State private var imageOpacity: Double = 0
-    @State private var imageOffset: CGFloat = 30
-    @State private var summaryOpacity: Double = 0
-    @State private var summaryOffset: CGFloat = 30
-    @State private var contentOpacity: Double = 0
-    @State private var contentOffset: CGFloat = 30
-
     // MARK: - Body
     var body: some View {
         ZStack {
@@ -25,16 +14,12 @@ struct NewsDetailView: View {
                 VStack(alignment: .leading, spacing: 0) {
                     // Title and Metadata Section
                     VStack(alignment: .leading, spacing: 16) {
-
-                        
                         // Title
                         Text(article.title)
                             .font(.system(size: 28, weight: .regular, design: .serif))
                             .lineLimit(nil)
                             .foregroundColor(.white)
                             .multilineTextAlignment(.leading)
-                            .opacity(titleOpacity)
-                            .offset(y: titleOffset)
                         
                         // Source and timestamp
                         HStack(spacing: 8) {
@@ -67,13 +52,9 @@ struct NewsDetailView: View {
                                     .foregroundColor(.white.opacity(0.9))
                             }
                         }
-                        .opacity(metadataOpacity)
-                        .offset(y: metadataOffset)
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 74) // 50px for status bar + 24px spacing to toolbar
-                    
-                    
                     
                     // Shared Article Image
                     VStack(alignment: .leading, spacing: 16) {
@@ -96,8 +77,6 @@ struct NewsDetailView: View {
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 24)
-                    .opacity(imageOpacity)
-                    .offset(y: imageOffset)
 
                     // Content Section
                     VStack(alignment: .leading, spacing: 20) {
@@ -130,8 +109,6 @@ struct NewsDetailView: View {
                                 }
                             }
                         }
-                        .opacity(summaryOpacity)
-                        .offset(y: summaryOffset)
                         
                         // Full Article Content
                         VStack(alignment: .leading, spacing: 16) {
@@ -140,8 +117,6 @@ struct NewsDetailView: View {
                                 .lineSpacing(6)
                                 .foregroundColor(.white)
                         }
-                        .opacity(contentOpacity)
-                        .offset(y: contentOffset)
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 24)
@@ -195,27 +170,6 @@ struct NewsDetailView: View {
         }
         .navigationBarHidden(true)
         .preferredColorScheme(.dark)
-        .onAppear {
-            // Simplified animation sequence to avoid conflicts with zoom transition
-            withAnimation(.easeOut(duration: 0.4).delay(0.1)) {
-                titleOpacity = 1.0
-                titleOffset = 0
-                metadataOpacity = 1.0
-                metadataOffset = 0
-            }
-            
-            withAnimation(.easeOut(duration: 0.4).delay(0.2)) {
-                imageOpacity = 1.0
-                imageOffset = 0
-            }
-            
-            withAnimation(.easeOut(duration: 0.4).delay(0.3)) {
-                summaryOpacity = 1.0
-                summaryOffset = 0
-                contentOpacity = 1.0
-                contentOffset = 0
-            }
-        }
     }
 }
 

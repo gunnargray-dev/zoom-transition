@@ -8,11 +8,6 @@ struct Constants {
 struct NewsFeedView: View {
     // MARK: - Properties
     @State private var articles = NewsArticle.sampleArticles
-    @Namespace private var transitionNamespace
-
-    private let columns = [
-        GridItem(.flexible(), spacing: 0)
-    ]
 
     // MARK: - Body
     var body: some View {
@@ -21,14 +16,12 @@ struct NewsFeedView: View {
                 Color(hex: "191a1a").ignoresSafeArea()
 
                 ScrollView {
-                    LazyVGrid(columns: columns, spacing: 20) {
+                    VStack(spacing: 20) {
                         ForEach(articles) { article in
                             NavigationLink {
                                 NewsDetailView(article: article)
-                                    .navigationTransition(.zoom(sourceID: article.id, in: transitionNamespace))
                             } label: {
                                 NewsCardView(article: article)
-                                    .matchedTransitionSource(id: article.id, in: transitionNamespace)
                             }
                             .buttonStyle(PlainButtonStyle())
                         }
@@ -123,6 +116,7 @@ struct NewsCardView: View {
             .padding(.vertical, 16)
             .frame(height: 100, alignment: .top)
         }
+        .frame(maxWidth: .infinity)
         .background(
             LinearGradient(
                 stops: [
@@ -140,6 +134,7 @@ struct NewsCardView: View {
                 .inset(by: 0.5)
                 .stroke(Constants.borderOffsetPlus, lineWidth: 1)
         )
+        .layoutPriority(1)
     }
 }
 
