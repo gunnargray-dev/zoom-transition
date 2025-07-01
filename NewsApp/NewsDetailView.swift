@@ -3,6 +3,7 @@ import SwiftUI
 struct NewsDetailView: View {
     // MARK: - Properties
     let article: NewsArticle
+    let imageTransition: Namespace.ID
     @Environment(\.dismiss) private var dismiss
 
     // MARK: - Body
@@ -56,7 +57,7 @@ struct NewsDetailView: View {
                     .padding(.horizontal, 20)
                     .padding(.top, 74) // 50px for status bar + 24px spacing to toolbar
                     
-                    // Shared Article Image
+                    // Shared Article Image with matched transition
                     VStack(alignment: .leading, spacing: 16) {
                         AsyncImage(url: URL(string: article.imageUrl)) { image in
                             image
@@ -74,6 +75,7 @@ struct NewsDetailView: View {
                                         .tint(.white)
                                 )
                         }
+                        .matchedTransitionDestination(id: article.id, in: imageTransition)
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 24)
@@ -175,8 +177,10 @@ struct NewsDetailView: View {
 
 #Preview {
     @Previewable @State var selectedArticle: NewsArticle? = NewsArticle.sampleArticles.first
+    @Previewable @Namespace var previewNamespace
 
     return NewsDetailView(
-        article: NewsArticle.sampleArticles.first!
+        article: NewsArticle.sampleArticles.first!,
+        imageTransition: previewNamespace
     )
 }

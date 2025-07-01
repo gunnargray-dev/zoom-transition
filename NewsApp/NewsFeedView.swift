@@ -8,6 +8,7 @@ struct Constants {
 struct NewsFeedView: View {
     // MARK: - Properties
     @State private var articles = NewsArticle.sampleArticles
+    @Namespace private var imageTransition
 
     // MARK: - Body
     var body: some View {
@@ -19,9 +20,10 @@ struct NewsFeedView: View {
                     VStack(spacing: 20) {
                         ForEach(articles) { article in
                             NavigationLink {
-                                NewsDetailView(article: article)
+                                NewsDetailView(article: article, imageTransition: imageTransition)
+                                    .navigationTransition(.zoom(sourceID: article.id, in: imageTransition))
                             } label: {
-                                NewsCardView(article: article)
+                                NewsCardView(article: article, imageTransition: imageTransition)
                             }
                             .buttonStyle(PlainButtonStyle())
                         }
@@ -42,11 +44,12 @@ struct NewsFeedView: View {
 struct NewsCardView: View {
     // MARK: - Properties
     let article: NewsArticle
+    let imageTransition: Namespace.ID
 
     // MARK: - Body
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // Responsive Image
+            // Responsive Image with matched transition
             AsyncImage(url: URL(string: article.imageUrl)) { image in
                 image
                     .resizable()
@@ -63,6 +66,7 @@ struct NewsCardView: View {
                     )
             }
             .clipShape(RoundedRectangle(cornerRadius: 12))
+            .matchedTransitionSource(id: article.id, in: imageTransition)
             .padding(.horizontal, 12)
             .padding(.top, 12)
             
