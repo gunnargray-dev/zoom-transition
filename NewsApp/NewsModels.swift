@@ -33,7 +33,7 @@ struct NewsArticle: Identifiable, Hashable {
             publishedDate: Date().addingTimeInterval(-7200),
             imageUrl: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
             category: .environment,
-            accentColor: Color(hex: "4A90E2")
+            accentColor: Color(hex: "4CAF50")
         ),
         NewsArticle(
             title: "Revolutionary Brain-Computer Interface Breakthrough",
@@ -43,7 +43,7 @@ struct NewsArticle: Identifiable, Hashable {
             publishedDate: Date().addingTimeInterval(-10800),
             imageUrl: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
             category: .health,
-            accentColor: Color(hex: "E74C3C")
+            accentColor: Color(hex: "FF6B6B")
         ),
         NewsArticle(
             title: "Mars Mission Reveals Stunning Geological Discoveries",
@@ -53,7 +53,7 @@ struct NewsArticle: Identifiable, Hashable {
             publishedDate: Date().addingTimeInterval(-14400),
             imageUrl: "https://images.unsplash.com/photo-1446776858070-33f2501b2c5e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
             category: .science,
-            accentColor: Color(hex: "9B59B6")
+            accentColor: Color(hex: "9C27B0")
         ),
         NewsArticle(
             title: "AI Revolution: Major Tech Breakthrough Announced",
@@ -63,7 +63,7 @@ struct NewsArticle: Identifiable, Hashable {
             publishedDate: Date().addingTimeInterval(-18000),
             imageUrl: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
             category: .technology,
-            accentColor: Color(hex: "1ABC9C")
+            accentColor: Color(hex: "1FB8CD")
         ),
         NewsArticle(
             title: "Global Markets Surge as Economic Optimism Grows",
@@ -73,7 +73,7 @@ struct NewsArticle: Identifiable, Hashable {
             publishedDate: Date().addingTimeInterval(-21600),
             imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
             category: .business,
-            accentColor: Color(hex: "F39C12")
+            accentColor: Color(hex: "2196F3")
         )
     ]
 }
