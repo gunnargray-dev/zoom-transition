@@ -8,6 +8,7 @@ struct Constants {
 struct NewsFeedView: View {
     // MARK: - Properties
     @State private var articles = NewsArticle.sampleArticles
+    @State private var selectedArticle: NewsArticle?
     @Namespace private var imageTransition
 
     // MARK: - Body
@@ -19,8 +20,8 @@ struct NewsFeedView: View {
                 ScrollView {
                     VStack(spacing: 20) {
                         ForEach(articles) { article in
-                            NavigationLink {
-                                NewsDetailView(article: article, imageTransition: imageTransition)
+                            Button {
+                                selectedArticle = article
                             } label: {
                                 NewsCardView(article: article, imageTransition: imageTransition)
                             }
@@ -31,6 +32,9 @@ struct NewsFeedView: View {
                     .padding(.top, 20)
                     .padding(.bottom, 20)
                 }
+            }
+            .navigationDestination(item: $selectedArticle) { article in
+                NewsDetailView(article: article, imageTransition: imageTransition)
             }
         }
         .navigationTitle("News Feed")
@@ -49,25 +53,25 @@ struct NewsCardView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             // Responsive Image with matched transition
-            AsyncImage(url: URL(string: article.imageUrl)) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(height: 200)
-                    .clipped()
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .matchedGeometryEffect(id: article.id, in: imageTransition)
-            } placeholder: {
-                Rectangle()
-                    .fill(article.accentColor.opacity(0.3))
-                    .frame(height: 200)
-                    .overlay(
-                        ProgressView()
-                            .tint(.white)
-                    )
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .matchedGeometryEffect(id: article.id, in: imageTransition)
+            ZStack {
+                AsyncImage(url: URL(string: article.imageUrl)) { image in
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(height: 200)
+                        .clipped()
+                } placeholder: {
+                    Rectangle()
+                        .fill(article.accentColor.opacity(0.3))
+                        .frame(height: 200)
+                        .overlay(
+                            ProgressView()
+                                .tint(.white)
+                        )
+                }
             }
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .matchedGeometryEffect(id: article.id, in: imageTransition)
             .padding(.horizontal, 12)
             .padding(.top, 12)
             

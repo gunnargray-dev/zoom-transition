@@ -59,24 +59,25 @@ struct NewsDetailView: View {
                     
                     // Shared Article Image with matched transition
                     VStack(alignment: .leading, spacing: 16) {
-                        AsyncImage(url: URL(string: article.imageUrl)) { image in
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(height: 240)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
-                                .clipped()
-                                .matchedGeometryEffect(id: article.id, in: imageTransition)
-                        } placeholder: {
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(Color(hex: article.category.color).opacity(0.6))
-                                .frame(height: 240)
-                                .overlay(
-                                    ProgressView()
-                                        .tint(.white)
-                                )
-                                .matchedGeometryEffect(id: article.id, in: imageTransition)
+                        ZStack {
+                            AsyncImage(url: URL(string: article.imageUrl)) { image in
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(height: 240)
+                                    .clipped()
+                            } placeholder: {
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Color(hex: article.category.color).opacity(0.6))
+                                    .frame(height: 240)
+                                    .overlay(
+                                        ProgressView()
+                                            .tint(.white)
+                                    )
+                            }
                         }
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .matchedGeometryEffect(id: article.id, in: imageTransition)
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 24)
